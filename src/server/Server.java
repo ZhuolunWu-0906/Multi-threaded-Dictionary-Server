@@ -63,10 +63,6 @@ public class Server {
 			DataInputStream input = new DataInputStream(clientSocket.getInputStream());
 		    DataOutputStream output = new DataOutputStream(clientSocket.getOutputStream());
 		    
-		    System.out.println("CLIENT: "+input.readUTF());
-		    
-		    output.writeUTF("Server: Hi Client "+counter+" !!!");
-		    
 		    // Receive more data..
 		    while(true) {
 		    	if(input.available() > 0) {
