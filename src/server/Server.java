@@ -28,34 +28,32 @@ public class Server {
 		
 		if (args.length != 2) {
 			System.out.println("Please enter a valid port number and dictionary name or address");
-		}
-		port = Integer.parseInt(args[0]);
-		dictAddress = args[1];
-		
-		// Create a JSON dictionary if it does not exist
-		JsonUtil.createJsonFile(dictAddress);
-		
-		ServerSocketFactory factory = ServerSocketFactory.getDefault();
-		
-		System.out.println("DictionaryServer starts running");
-		
-		try(ServerSocket server = factory.createServerSocket(port))
-		{
-			// Wait for connections.
-			while(true)
+		} else {
+			port = Integer.parseInt(args[0]);
+			dictAddress = args[1];
+			
+			// Create a JSON dictionary if it does not exist
+			JsonUtil.createJsonFile(dictAddress);
+			
+			ServerSocketFactory factory = ServerSocketFactory.getDefault();
+			
+			System.out.println("DictionaryServer starts running");
+			
+			try(ServerSocket server = factory.createServerSocket(port))
 			{
-				Socket client = server.accept();
-							
-				// Start a new thread for a connection
-				Thread t = new Thread(() -> serveClient(client));
-				t.start();
+				// Wait for connections.
+				while(true)
+				{
+					Socket client = server.accept();
+					Thread t = new Thread(() -> serveClient(client)); // Start a new thread for a connection
+					t.start();
+				}
+			} 
+			catch (IOException e)
+			{
+				e.printStackTrace();
 			}
-		} 
-		catch (IOException e)
-		{
-			e.printStackTrace();
 		}
-		
 	}
 	
 	private static void serveClient(Socket client)

@@ -33,15 +33,15 @@ public class Client{
 		// Read from command line arguments
 		if (args.length != 2) {
 			System.out.println("Please enter a valid server address and port number");
+		} else {
+			ip = args[0];
+			port = Integer.parseInt(args[1]);
+			
+			// Render GUI
+			// All features are implemented within the function (guiImplement())
+			System.out.println("DictionaryClient is running..");
+			guiImplement();
 		}
-		ip = args[0];
-		port = Integer.parseInt(args[1]);
-		
-		// Render GUI
-		// All features are implemented within the function (guiImplement())
-		System.out.println("DictionaryClient is running..");
-		guiImplement();
-
 	}
 	
 	private static String createSocket(JSONObject newCommand) {
