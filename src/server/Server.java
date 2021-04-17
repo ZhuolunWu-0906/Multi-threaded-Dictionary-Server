@@ -19,33 +19,37 @@ import javax.net.ServerSocketFactory;
 
 public class Server {
 	
-	// Declare the port number
-	private static int port = 3005;
-	
-	// Identifies the user number connected
+	private static int port;
+	private static String dictAddress;
 	private static int counter = 0;
 
 	public static void main(String[] args)
 	{	
 		
+		if (args.length != 2) {
+			System.out.println("Please enter a valid port number and dictionary name or address");
+		}
+		port = Integer.parseInt(args[0]);
+		dictAddress = args[1];
+		
+		// Create a JSON dictionary if it does not exist
+		JsonUtil.createJsonFile(dictAddress);
+		
 		ServerSocketFactory factory = ServerSocketFactory.getDefault();
+		
+		System.out.println("DictionaryServer starts running");
 		
 		try(ServerSocket server = factory.createServerSocket(port))
 		{
-			System.out.println("Waiting for client connection-");
-			
 			// Wait for connections.
 			while(true)
 			{
 				Socket client = server.accept();
-				counter++;
-				System.out.println("Client "+counter+": Applying for connection!");
 							
 				// Start a new thread for a connection
 				Thread t = new Thread(() -> serveClient(client));
 				t.start();
 			}
-			
 		} 
 		catch (IOException e)
 		{
@@ -68,8 +72,11 @@ public class Server {
 		    	if(input.available() > 0) {
 		    		// Attempt to convert read data to JSON
 		    		JSONObject command = (JSONObject) parser.parse(input.readUTF());
+		    		System.out.println("Received from client "+counter+": "+command);
+		    		counter++;
 		    		JSONObject reply = parseCommand(command);
 		    		output.writeUTF(reply.toJSONString());
+		    		break;
 		    	}
 		    }
 		    
@@ -84,7 +91,7 @@ public class Server {
 	private static JSONObject parseCommand(JSONObject command) {
 		
 		JSONObject reply = new JSONObject();
-		JSONArray dict = JsonUtil.readJsonFile();
+		JSONArray dict = JsonUtil.readJsonFile(dictAddress);
 		String word = command.get("word").toString();
 		String meaning = command.get("meaning").toString();
 		
@@ -136,7 +143,7 @@ public class Server {
 				break;
 		}
 		
-		try (FileWriter file = new FileWriter("server-dict.json")) {
+		try (FileWriter file = new FileWriter(dictAddress)) {
             //We can write any JSONArray or JSONObject instance to the file
             file.write(dict.toJSONString()); 
             file.flush();

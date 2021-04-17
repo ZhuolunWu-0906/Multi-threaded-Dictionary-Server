@@ -1,0 +1,2 @@
+java -jar DictionaryServer.jar 3005 server-dict.json
+java -jar DictionaryClient.jar localhost 3005

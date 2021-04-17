@@ -12,7 +12,6 @@ import org.json.simple.parser.ParseException;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
@@ -26,12 +25,21 @@ import java.awt.*;
 public class Client{
 	
 	// IP and port
-	private static String ip = "localhost";
-	private static int port = 3005;
+	private static String ip;
+	private static int port;
 	
-	@SuppressWarnings("unchecked")
 	public static void main(String[] args) {
 		
+		// Read from command line arguments
+		if (args.length != 2) {
+			System.out.println("Please enter a valid server address and port number");
+		}
+		ip = args[0];
+		port = Integer.parseInt(args[1]);
+		
+		// Render GUI
+		// All features are implemented within the function (guiImplement())
+		System.out.println("DictionaryClient is running..");
 		guiImplement();
 
 	}
@@ -53,7 +61,7 @@ public class Client{
 	    	
 	    	//	Print out results received from server..
 	    	String receive = input.readUTF();
-	    	result = parseCommand((JSONObject) parser.parse(receive));
+	    	result = parseReply((JSONObject) parser.parse(receive));
 		    
 		} 
 		catch (UnknownHostException e)
@@ -69,11 +77,13 @@ public class Client{
 		return result;
 	}
 
-	private static String parseCommand(JSONObject command) {
+	// Read and parse reply from server
+	private static String parseReply(JSONObject command) {
 		
 		String status = command.get("status").toString();
 		String word = command.get("word").toString();
 		
+		// Extract result string
 		switch ((String) command.get("command")) {
 		case "search":
 			if (status.equals("succeeded")) {
@@ -107,6 +117,7 @@ public class Client{
 		return "You have not enter a valid word to search :)";
 	}
 	
+	// GUI
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private static void guiImplement() {
 		
@@ -128,6 +139,7 @@ public class Client{
         listRenderer.setHorizontalAlignment(DefaultListCellRenderer.CENTER);
         actions.setRenderer(listRenderer);
         
+        // Send JSONObject message
         proceedButton.addActionListener(new ActionListener()
         {
             public void actionPerformed(ActionEvent e)
@@ -142,9 +154,10 @@ public class Client{
             	newCommand.put("command", action);
             	newCommand.put("word", word);
             	newCommand.put("meaning", meaning);
-            	System.out.println(newCommand.toJSONString());
-            	JOptionPane.showMessageDialog(frame,
-            			createSocket(newCommand));createSocket(newCommand);
+            	//	Send message and receive reply
+            	System.out.println("Sending message to DictionaryServer");
+            	JOptionPane.showMessageDialog(frame, createSocket(newCommand));
+            	System.out.println("Received message from DictionaryServer");
             }
         });
         

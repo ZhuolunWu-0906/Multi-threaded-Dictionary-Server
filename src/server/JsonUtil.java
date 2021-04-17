@@ -16,12 +16,16 @@ public class JsonUtil {
 	
 	
 	//	Create a dictionary (JSON) file if it does not exist
-	public static void createJsonFile() {
-		if (!(new File("server-dict.json").isFile())) {
+	public static void createJsonFile(String address) {
+		if (!(new File(address).isFile())) {
+			
+			System.out.println("The dictionary file does exist.");
+			System.out.println("A new dictionary file "+address+" has been created.");
+			System.out.println("Notice: the new dictionary is currently empty.");
 			
 			JSONArray dict = new JSONArray();
 			
-			try (FileWriter file = new FileWriter("server-dict.json")) {
+			try (FileWriter file = new FileWriter(address)) {
 	            //We can write any JSONArray or JSONObject instance to the file
 	            file.write(dict.toJSONString()); 
 	            file.flush();
@@ -34,12 +38,12 @@ public class JsonUtil {
 	
 	
 	//	Read dictionary (JSON) file
-	public static JSONArray readJsonFile() {
+	public static JSONArray readJsonFile(String address) {
 		
 		JSONParser jsonParser = new JSONParser();
 		JSONArray dict = new JSONArray();
 		
-		try (FileReader reader = new FileReader("server-dict.json"))
+		try (FileReader reader = new FileReader(address))
         {
             Object obj = jsonParser.parse(reader);
             dict = (JSONArray) obj;
