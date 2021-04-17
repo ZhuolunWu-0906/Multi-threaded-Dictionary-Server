@@ -1,3 +1,6 @@
+// Zhuolun Wu, 954465
+// This class implements the server side of the diction
+
 package server;
 
 import java.io.DataInputStream;

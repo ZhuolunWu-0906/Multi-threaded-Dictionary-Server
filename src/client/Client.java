@@ -1,4 +1,9 @@
+// Zhuolun Wu, 954465
+// This class implements the client side of dictionary
+// with a GUI being implemented as well
+
 package client;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;

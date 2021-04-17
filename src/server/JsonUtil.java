@@ -1,3 +1,7 @@
+// Zhuolun Wu, 954465
+// This class contains multiple functions for dictionary reading
+// writing, querying (search), deleting, adding and modifying
+
 package server;
 
 import java.io.FileWriter;
